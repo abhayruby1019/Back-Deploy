@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pfin-pan-signature-service
+  labels:
+    app: pfin-pan-signature-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pfin-pan-signature-service
+  template:
+    metadata:
+      labels:
+        app: pfin-pan-signature-service
+    spec:
+      containers:
+        - name: pfin-pan-signature-service
+          image: 500440857146.dkr.ecr.ap-south-1.amazonaws.com/pfin_pan_signature_service:IMAGE_TAG
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: 1000m
+            requests:
+              memory: 1Gi
+              cpu: 1000m
+          ports:
+            - containerPort: 3038
+    #   imagePullSecrets:
+    #     - name:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pfin-pan-signature-service
+spec:
+  type: NodePort
+  ports:
+    - port: 3038
+      targetPort: 3038
+  selector:
+    app: pfin-pan-signature-service
